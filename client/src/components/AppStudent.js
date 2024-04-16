@@ -12,12 +12,9 @@ import getWeb3 from "../helpers/getWeb3";
 //////////////////////////////////////////////////////////////////////////////////|
 //        CONTRACT ADDRESS           &          CONTRACT ABI                      |
 //////////////////////////////////////////////////////////////////////////////////|                                                             |
-//const CONTRACT_ADDRESS = require("../contracts/Auction.json").networks[1337].address //1337
-const CONTRACT_ADDRESS = require("../contracts/Auction.json").networks[11155111].address //sepolia testnet
-
-
-const CONTRACT_ABI = require("../contracts/Auction.json").abi
-const CONTRACT_NAME = require("../contracts/Auction.json").contractName
+const CONTRACT_ADDRESS = require("../contracts/StudentManagement.json").networks[1337].address //local 1337 sepolia testnet 11155111
+const CONTRACT_ABI = require("../contracts/StudentManagement.json").abi
+const CONTRACT_NAME = require("../contracts/StudentManagement.json").contractName
 
 export default class App extends React.Component {
   state = { web3Provider: null, accounts: null, networkId: null, contract: null, storageValue: null };

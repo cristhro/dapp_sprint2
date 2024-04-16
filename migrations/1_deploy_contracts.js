@@ -1,7 +1,7 @@
 //var SimpleStorage = artifacts.require("./SimpleStorage.sol");
-var Auction = artifacts.require("./Auction.sol");
+var UserManagment = artifacts.require("./UserManagment.sol");
 
 module.exports = function(deployer) {
   //deployer.deploy(SimpleStorage);
-  deployer.deploy(Auction);
+  deployer.deploy(UserManagment);
 };

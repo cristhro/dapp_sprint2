@@ -23,7 +23,7 @@
 /* -------------------- AUCTION HEADER STYLE ------------------ */
 /* ------------------------------------------------------------ */
 
-.Auction-header {
+.User-header {
   background-color: white;
   border-bottom: 0.5px solid grey;
   padding-top: 20px;
@@ -77,14 +77,14 @@
 /* -------------------- AUCTION BODY STYLE ------------------ */
 /* ------------------------------------------------------------ */
 
-.Auction-body {
+.User-body {
   background-color: #EDEDED;
   padding-top: 50px;
   padding-bottom: 100px;
   min-height: 90vh;
 }
 
-.Auction-body-components {
+.User-body-components {
   width:80%;
   margin:auto;
 }
@@ -99,7 +99,7 @@ h2 {
   font-weight: 500;
 }
 
-.Auction-information {
+.User-information {
   width: 100%;
   margin: auto;
   margin-top: 40px;
@@ -109,22 +109,22 @@ h2 {
   flex-wrap: wrap;
 }
 
-.Auction-information-img {
+.User-information-img {
   flex: 1;
   align-self: center;
 }
 
-.Auction-information-img img {
+.User-information-img img {
   width:420px;
 }
 
-.Auction-information-text {
+.User-information-text {
   flex: 2;
   margin-left: 10px;
   font-size:15px;
 }
 
-.Auction-information-text b{
+.User-information-text b{
   color:darkslategrey;
 }
 
@@ -174,12 +174,12 @@ button {
   box-shadow: 0 0 0 0.2rem rgb(195 93 93 / 50%);
 }
 
-.Auction-actions {
+.User-actions {
   width: 100%;
   margin: auto;
 }
 
-.Auction-actions input {
+.User-actions input {
   width: 50%;
   padding: 8px;
   min-width:200px;
