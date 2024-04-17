@@ -194,9 +194,19 @@ export default class App extends React.Component {
         <div className="User-body">
           {/* User not registered */}
           {!this.state.userInfo && (
+            <div className="User-logged">
+              <div className="card">
+                <RegisterUser className="card" onRegisterUser={this.registerUser} />
+              </div>
+              {/* ---- Donation information ---- */}
             <div className="card">
-              <RegisterUser className="card" onRegisterUser={this.registerUser} />
+              <DonationInformation totalDonations={this.state.totalDonations} myDonationAmount={this.state.myDonationAmount} />
             </div>
+
+            <div className="card">
+              <RegisterDonation onRegisterDonation={this.registerDonation} myDonationAmount={this.state.myDonationAmount} />
+            </div>
+          </div>
           )}
 
           {/* User registered */}
