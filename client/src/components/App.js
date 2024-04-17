@@ -9,6 +9,12 @@ import "./App.css";
 // Import helper functions
 import getWeb3 from "../helpers/getWeb3";
 
+// Import React components
+import { RegisterUser } from './RegisterUser';
+import { UserInformation } from './UserInformation';
+import { DonationInformation } from './DonationInformation';
+import { RegisterDonation } from './RegisterDonation';
+
 //////////////////////////////////////////////////////////////////////////////////|
 //        CONTRACT ADDRESS           &          CONTRACT ABI                      |
 //////////////////////////////////////////////////////////////////////////////////|                                                             |
@@ -19,8 +25,9 @@ const CONTRACT_ABI = require("../contracts/UserManagment.json").abi
 const CONTRACT_NAME = require("../contracts/UserManagment.json").contractName
 
 
-const DONATION_CONTRACT_ADDRESS = require("../contracts/Donation.json").networks[1337].address 
+const DONATION_CONTRACT_ADDRESS = require("../contracts/Donation.json").networks[1337].address
 const DONATION_CONTRACT_ABI = require("../contracts/Donation.json").abi
+
 
 
 export default class App extends React.Component {
@@ -41,12 +48,12 @@ export default class App extends React.Component {
       const contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
 
 
-    // Create the Smart Contract instance
-    const donationContract = new web3.eth.Contract(DONATION_CONTRACT_ABI, DONATION_CONTRACT_ADDRESS);
-    this.setState({ donationContract });
-    this.setState({ donationAmount : 0 });
-    this.setState({ myDonationAmount : 0 });
-    //const [donationMessage, setDonationMessage] = useState('');
+      // Create the Smart Contract instance
+      const donationContract = new web3.eth.Contract(DONATION_CONTRACT_ABI, DONATION_CONTRACT_ADDRESS);
+      this.setState({ donationContract });
+      this.setState({ donationAmount: 0 });
+      this.setState({ myDonationAmount: 0 });
+      //const [donationMessage, setDonationMessage] = useState('');
 
 
       // Set web3, accounts, and contract to the state, and then proceed with an
@@ -59,8 +66,8 @@ export default class App extends React.Component {
       // Load donation information
       this.getDonationInformation();
 
-       // Load my donation information
-       this.getMyDonationInformation();
+      // Load my donation information
+      this.getMyDonationInformation();
 
       // --------- TO LISTEN TO EVENTS AFTER EVERY COMPONENT MOUNT ---------
       this.handleMetamaskEvent();
@@ -105,44 +112,27 @@ export default class App extends React.Component {
 
     // Get the user donation
     const response = await donationContract.methods.getDonationAmount(accounts[0]).call();
-    this.setState({ myDonationAmount: response })
+    this.setState({ myDonationAmount: response  })
   }
+  // ------------ REGISTER DONATION FUNCTION ------------
+  registerDonation = async (donationAmount) => {
+    const { donationContract, web3Provider, accounts } = this.state;
 
-
-
-
-  registerDonation = async () => {
-    const { donationContract, donationAmount, web3Provider, accounts } = this.state;
-    //const res = await donationContract.methods.receive().send({ from: accounts[0], value:1 });
-    
-     // Define la cantidad de Ether que quieres enviar
-     //const amountToSend = web3Provider.utils.toWei('1', 'ether'); // 1 Ether
-    
     try {
-      //await web3Provider.eth.sendTransaction({ from: accounts[0], to: donationContract, value: amountToSend });
-
-      //await web3Provider.eth.sendTransaction({ from: accounts[0], to: donationContract, value: web3.utils.toWei('1', 'ether') });
       await donationContract.methods.depositEther().send({ from: accounts[0], value: web3Provider.utils.toWei(donationAmount, 'ether') });
-
-      //await donationContract.methods.receive().send({ from: accounts[0] });
-      //setDonationMessage('Donation successful!');
-  } catch (error) {
+    } catch (error) {
       console.error('Error sending donation:', error);
-      //setDonationMessage('Donation failed.');
-  }
-    
-    
-    
+      // setDonationMessage('Donation failed.');
+    }
+
+
+
     const response = await donationContract.methods.getTotalDonations().call();
     this.setState({ totalDonations: response })
 
     // Get the user donation
     const myResponse = await donationContract.methods.getDonationAmount(accounts[0]).call();
     this.setState({ myDonationAmount: myResponse })
-
-
-
-    
   }
 
   // --------------------------------------------------------------
@@ -157,38 +147,14 @@ export default class App extends React.Component {
     this.setState({ userInfo: response })
   }
 
- 
-
-  // ------------ REGISTER FUNCTION ------------
-  registerUser = async () => {
-    const { accounts, contract, userForm } = this.state;
-
-    // const userForm = {
-    //   name: 'Cris',
-    //   email: 'cristhian@test.com',
-    //   tipoUsuario: 1,
-    //   imageURI: 'https://i.pravatar.cc/400'
-    // }
+  // ------------ REGISTER USER FUNCTION ------------
+  registerUser = async (userForm) => {
+    const { accounts, contract } = this.state;
     const res = await contract.methods.registerUser(userForm.name, userForm.email, userForm.tipoUsuario, userForm.imageURI).send({ from: accounts[0] })
     const response = await contract.methods.getUser().call({ from: accounts[0] });
     this.setState({ userInfo: response })
   };
 
-  // ------------ STOP USER FUNCTION ------------
-  stopUser = async () => {
-    const { accounts, contract } = this.state;
-
-    // Stop the auction
-    await contract.methods.stopUser().send({ from: accounts[0] });
-
-    // Get the new values: isActive and newOwner
-    const isActive = await contract.methods.isActive().call();
-    const newOwner = await contract.methods.newOwner().call();
-
-    // Update state with the result.
-    this.setState({ isActive, newOwner });
-  }
-  
 
   render() {
     if (!this.state.web3Provider) {
@@ -200,100 +166,41 @@ export default class App extends React.Component {
     }
     return (
       <div className="App">
-          {/* ---- Context Information: Account & Network ---- */}
-          <div className="User-header">
-              <div className="Header-context-information">
-                <p> Network connected: {this.state.networkId}</p>
-                <p> Your address: {this.state.accounts[0]}</p>
-              </div>
+        {/* ---- Context Information: Account & Network ---- */}
+        <div className="User-header">
+          <div className="Header-context-information">
+            <p> Network connected: {this.state.networkId}</p>
+            <p> Your address: {this.state.accounts[0]}</p>
+            {this.state.userInfo && (
+              <p> Bienvenido  {this.state.userInfo.name} 👋</p>
+            )}
           </div>
-
-          {/* ---- User information ---- */}
-          <div className="User-component-1">
-            
-              {
-                this.state.userInfo &&
-                <>
-            <div className="User-component-body">
-            <h2 id="inline">User information</h2>
-                  <div className="User-information">
-                    {/* User Image */}
-                    <div className="User-information-img">
-                    {this.state.userInfo.imageURI && <img src={this.state.userInfo.imageURI}></img>}
-                    </div>
-                    {/* User information */}
-                    <div className="User-information-text">
-
-                        {/* User Description */}
-                      <p>{this.state.userInfo.name}</p>
-
-                        {/* Basic Information */}
-                      <p><b>Is Active: </b>{this.state.userInfo.isActive ? "The user is still active!! 🤩 🤩" : "The user is not longer active 😭 😭"}</p>
-                      <p><b>User Type:</b> {this.state.userInfo.tipoUsuario}</p>
-                    </div>
-                  </div>
-                  </div>
-                </>
-              }
-          </div>
-
-
-        {/* ---- User actions ---- */}
-
-        {
-          !this.state.userInfo &&
-          <>
-          <div className="User-component-2">
-            <div className="User-component-body">
-              <div className="User-actions">
-                <h2>User Registration</h2>
-                <input placeholder="Insert name" onChange={(e) => this.setState({ userForm: { ...this.state.userForm, name: e.target.value } })}></input>
-                <input type="email"  placeholder="Insert email" onChange={(e) => this.setState({ userForm: { ...this.state.userForm, email: e.target.value } })}></input>
-                <input type="number" placeholder="Insert tipoUsuario" onChange={(e) => this.setState({ userForm: { ...this.state.userForm, tipoUsuario: parseInt(e.target.value) || '' } })}></input>
-                <input placeholder="Insert imageURI" onChange={(e) => this.setState({ userForm: { ...this.state.userForm, imageURI: e.target.value } })}></input>
-                <button id="button-send" onClick={this.registerUser}>Register User</button>
-              </div>
-            </div>
-          </div>
-          </>
-        }
-
-       
-        <hr></hr>
-
-
-       {/* ---- Donation information ---- */}
-       <div className="User-component-1">
-        {
-            this.state.totalDonations &&
-            <>
-        <div className="User-component-body">
-        <h2 id="inline">Donation information</h2>
-              <div className="User-information">
-                {/* Donation information */}
-                <div className="User-information-text">
-                    {/* Basic Information */}
-                  <p><b>Donations:</b> {this.state.totalDonations}</p>
-                  <p><b>My Donations:</b> {this.state.myDonationAmount}</p>
-                </div>
-              </div>
-              </div>
-            </>
-        }
         </div>
-
-        <div className="User-component-2">
-            <div className="User-component-body">
-              <div className="User-actions">
-                <h2>Donation Registration</h2>
-                <input type="number" placeholder="Insert Donation" onChange={(e) => this.setState({ donationAmount: e.target.value })}></input>
-                <button id="button-send" onClick={this.registerDonation}>Register Donation</button>
-              </div>
-              {/* <p>{donationMessage}</p> */}
+        <div className="User-body">
+          {/* User not registered */}
+          {!this.state.userInfo && (
+            <div className="card">
+              <RegisterUser className="card" onRegisterUser={this.registerUser} />
             </div>
-          </div>
+          )}
 
+          {/* User registered */}
+          {this.state.userInfo && (
+            <div className="User-logged">
+              <div className="card">
+                <UserInformation className="card" user={this.state.userInfo} />
+              </div>
+              {/* ---- Donation information ---- */}
+              <div className="card">
+                <DonationInformation totalDonations={this.state.totalDonations} myDonationAmount={this.state.myDonationAmount} />
+              </div>
 
+              <div className="card">
+                <RegisterDonation onRegisterDonation={this.registerDonation} myDonationAmount={this.state.myDonationAmount} />
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     );
   }

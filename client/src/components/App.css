@@ -14,9 +14,9 @@
   margin-top: 40px;
 }
 
-.App-simplestorage-example{
-  width:80%;
-  margin:auto;
+.App-simplestorage-example {
+  width: 80%;
+  margin: auto;
 }
 
 /* ------------------------------------------------------------ */
@@ -78,15 +78,24 @@
 /* ------------------------------------------------------------ */
 
 .User-body {
+  display: grid;
+  place-items: center;
   background-color: #EDEDED;
-  padding-top: 50px;
   padding-bottom: 100px;
-  min-height: 90vh;
+}
+
+.User-logged {
+  display: flex;
+  flex-flow: wrap;
+  place-items: flex-start;
+  /* display: grid;
+  place-items: center;
+  grid-auto-flow: column; */
 }
 
 .User-body-components {
-  width:80%;
-  margin:auto;
+  width: 80%;
+  margin: auto;
 }
 
 h1 {
@@ -100,13 +109,12 @@ h2 {
 }
 
 .User-information {
-  width: 100%;
+  width: 80%;
   margin: auto;
-  margin-top: 40px;
-  text-align: left;
-  display: flex;
-  flex-direction:row-reverse;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  align-items: center;
 }
 
 .User-information-img {
@@ -115,17 +123,18 @@ h2 {
 }
 
 .User-information-img img {
-  width:420px;
+  width: 120px;
+  border-radius: 25px;
 }
 
 .User-information-text {
   flex: 2;
   margin-left: 10px;
-  font-size:15px;
+  font-size: 15px;
 }
 
-.User-information-text b{
-  color:darkslategrey;
+.User-information-text b {
+  color: darkslategrey;
 }
 
 /* ------------------------------------------------------------ */
@@ -135,7 +144,7 @@ h2 {
 button {
   padding: 8px;
   width: 20%;
-  min-width:200px;
+  min-width: 200px;
   max-width: 250px;
   cursor: pointer;
   border-radius: 5px;
@@ -159,8 +168,8 @@ button {
 #button-send {
   background-color: #b84040;
   color: white;
-  min-width:120px;
-  max-width:150px;
+  min-width: 120px;
+  max-width: 150px;
   margin-left: 2px;
 }
 
@@ -170,23 +179,130 @@ button {
   border-color: #923333;
 }
 
-#button-send:focus, #button-send:active {
+#button-send:focus,
+#button-send:active {
   box-shadow: 0 0 0 0.2rem rgb(195 93 93 / 50%);
 }
 
-.User-actions {
-  width: 100%;
+.Register-user {
+  /* width: 100%;
   margin: auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  align-items: center; */
+
 }
 
-.User-actions input {
-  width: 50%;
-  padding: 8px;
-  min-width:200px;
-  max-width: 400px;
-  text-align: center;
-  font-size: 15px;
+.Register-user form {
+  margin: auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  align-items: center;
 }
+
+/* INPUT */
+.wave-group {
+  position: relative;
+}
+
+.wave-group .input {
+  font-size: 16px;
+  padding: 10px 10px 10px 5px;
+  display: block;
+  width: 200px;
+  border: none;
+  border-bottom: 1px solid #515151;
+  background: transparent;
+}
+
+.wave-group .input:focus {
+  outline: none;
+}
+
+.wave-group>.label {
+  color: #999;
+  font-size: 18px;
+  font-weight: normal;
+  position: absolute;
+  pointer-events: none;
+  left: 5px;
+  top: 10px;
+  display: flex;
+}
+
+.wave-group>.label-char {
+  transition: 0.2s ease all;
+  transition-delay: calc(var(--index) * .05s);
+}
+
+.wave-group .input:focus~label .label-char,
+.wave-group .input:valid~label .label-char {
+  transform: translateY(-20px);
+  font-size: 14px;
+  color: #5264AE;
+}
+
+.wave-group .bar {
+  position: relative;
+  display: block;
+  width: 200px;
+}
+
+.wave-group .bar:before,
+.wave-group .bar:after {
+  content: '';
+  height: 2px;
+  width: 0;
+  bottom: 1px;
+  position: absolute;
+  background: #5264AE;
+  transition: 0.2s ease all;
+  -moz-transition: 0.2s ease all;
+  -webkit-transition: 0.2s ease all;
+}
+
+.wave-group .bar:before {
+  left: 50%;
+}
+
+.wave-group .bar:after {
+  right: 50%;
+}
+
+.wave-group .input:focus~.bar:before,
+.wave-group .input:focus~.bar:after {
+  width: 50%;
+}
+
+.card {
+  padding: 40px;
+  margin: 20px;
+  border-radius: 30px;
+  background: #e0e0e0;
+  box-shadow: 15px 15px 30px #bebebe,
+    -15px -15px 30px #ffffff;
+}
+
+/* INPUT */
+
+/* .input {
+  border: none;
+  outline: none;
+  border-radius: 15px;
+  padding: 1em;
+  background-color: #ccc;
+  box-shadow: inset 2px 5px 10px rgba(0, 0, 0, 0.3);
+  transition: 300ms ease-in-out;
+}
+
+.input:focus {
+  background-color: white;
+  transform: scale(1.05);
+  box-shadow: 13px 13px 100px #969696,
+    -13px -13px 100px #ffffff;
+} */
 
 #inline {
   display: inline;
