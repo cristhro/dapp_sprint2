@@ -12,12 +12,12 @@ import getWeb3 from "../helpers/getWeb3";
 //////////////////////////////////////////////////////////////////////////////////|
 //        CONTRACT ADDRESS           &          CONTRACT ABI                      |
 //////////////////////////////////////////////////////////////////////////////////|                                                             |
-const CONTRACT_ADDRESS = require("../contracts/UserManagment.json").networks[1337].address //1337
+const CONTRACT_ADDRESS = require("../contracts/Donation.json").networks[1337].address //1337
 // const CONTRACT_ADDRESS = require("../contracts/User.json").networks[11155111].address //sepolia testnet
 
 
-const CONTRACT_ABI = require("../contracts/UserManagment.json").abi
-const CONTRACT_NAME = require("../contracts/UserManagment.json").contractName
+const CONTRACT_ABI = require("../contracts/Donation.json").abi
+const CONTRACT_NAME = require("../contracts/Donation.json").contractName
 
 export default class App extends React.Component {
   state = { web3Provider: null, accounts: null, networkId: null, contract: null, storageValue: null, userForm: {} };
@@ -40,8 +40,8 @@ export default class App extends React.Component {
       // example of interacting with the contract's methods.
       this.setState({ web3Provider: web3, accounts, networkId, contract });
 
-      // Load user information
-      this.getUserInformation();
+      // Load donation information
+      this.getDonationInformation();
 
       // --------- TO LISTEN TO EVENTS AFTER EVERY COMPONENT MOUNT ---------
       this.handleMetamaskEvent();
@@ -71,13 +71,13 @@ export default class App extends React.Component {
     })
   }
 
-  // ------------ GET USER INFORMATION FUNCTION ------------
-  getUserInformation = async () => {
+  // ------------ GET DONATION INFORMATION FUNCTION ------------
+  getDonationInformation = async () => {
     const { accounts, contract } = this.state;
 
     // Get the user information
-    const response = await contract.methods.getUser().call({ from: accounts[0] });
-    this.setState({ userInfo: response })
+    const response = await contract.methods.getTotalDonations().call();
+    this.setState({ totalDonations: response })
   }
 
   // ------------ REGISTER FUNCTION ------------
@@ -129,28 +129,19 @@ export default class App extends React.Component {
               </div>
           </div>
 
-          {/* ---- User information ---- */}
+          {/* ---- Donation information ---- */}
           <div className="User-component-1">
             
               {
-                this.state.userInfo &&
+                this.state.totalDonations &&
                 <>
             <div className="User-component-body">
-            <h2 id="inline">User information</h2>
+            <h2 id="inline">Donation information</h2>
                   <div className="User-information">
-                    {/* User Image */}
-                    <div className="User-information-img">
-                    {this.state.userInfo.imageURI && <img src={this.state.userInfo.imageURI}></img>}
-                    </div>
                     {/* User information */}
                     <div className="User-information-text">
-
-                        {/* User Description */}
-                      <p>{this.state.userInfo.name}</p>
-
                         {/* Basic Information */}
-                      <p><b>Is Active: </b>{this.state.userInfo.isActive ? "The user is still active!! 🤩 🤩" : "The user is not longer active 😭 😭"}</p>
-                      <p><b>User Type:</b> {this.state.userInfo.tipoUsuario}</p>
+                      <p><b>Donations:</b> {this.state.totalDonations}</p>
                     </div>
                   </div>
                   </div>
@@ -159,7 +150,7 @@ export default class App extends React.Component {
           </div>
 
 
-        {/* ---- User actions ---- */}
+        {/* ---- User actions ----
 
         {
           !this.state.userInfo &&
@@ -177,7 +168,7 @@ export default class App extends React.Component {
             </div>
           </div>
           </>
-        }
+        } */}
       </div>
     );
   }
