@@ -20,7 +20,7 @@ const CONTRACT_ABI = require("../contracts/UserManagment.json").abi
 const CONTRACT_NAME = require("../contracts/UserManagment.json").contractName
 
 export default class App extends React.Component {
-  state = { web3Provider: null, accounts: null, networkId: null, contract: null, storageValue: null };
+  state = { web3Provider: null, accounts: null, networkId: null, contract: null, storageValue: null, userForm: {} };
 
   componentDidMount = async () => {
     try {
@@ -39,6 +39,9 @@ export default class App extends React.Component {
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
       this.setState({ web3Provider: web3, accounts, networkId, contract });
+
+      // Load user information
+      this.getUserInformation();
 
       // --------- TO LISTEN TO EVENTS AFTER EVERY COMPONENT MOUNT ---------
       this.handleMetamaskEvent();
@@ -78,18 +81,17 @@ export default class App extends React.Component {
   }
 
   // ------------ BID FUNCTION ------------
-  bid = async () => {
-    const { accounts, contract } = this.state;
+  registerUser = async () => {
+    const { accounts, contract, userForm } = this.state;
 
-    // TODO: Register user
     // Bid at an auction for X value
-    const userInfoForm = {
-      name: 'Cris',
-      email: 'cristhian@test.com',
-      tipoUsuario: 1,
-      imageURI: 'https://i.pravatar.cc/400'
-    }
-    const res = await contract.methods.registerUser(userInfoForm.name, userInfoForm.email, userInfoForm.tipoUsuario, userInfoForm.imageURI).send({ from: accounts[0] })
+    // const userForm = {
+    //   name: 'Cris',
+    //   email: 'cristhian@test.com',
+    //   tipoUsuario: 1,
+    //   imageURI: 'https://i.pravatar.cc/400'
+    // }
+    const res = await contract.methods.registerUser(userForm.name, userForm.email, userForm.tipoUsuario, userForm.imageURI).send({ from: accounts[0] })
     const response = await contract.methods.getUser().call({ from: accounts[0] });
     this.setState({ userInfo: response })
   };
@@ -130,61 +132,53 @@ export default class App extends React.Component {
 
           {/* ---- User information ---- */}
           <div className="User-component-1">
-            <div className="User-component-body">
-              <h2 id="inline">User information</h2>
-              <button id="button-call" onClick={this.getUserInformation}> GET INFORMATION</button>
+            
               {
                 this.state.userInfo &&
                 <>
+            <div className="User-component-body">
+            <h2 id="inline">User information</h2>
                   <div className="User-information">
                     {/* User Image */}
                     <div className="User-information-img">
                     {this.state.userInfo.imageURI && <img src={this.state.userInfo.imageURI}></img>}
-                    {this.state.userInfo.imageURI && <p><u>Descargar imágen</u> &nbsp;&nbsp; <u>Solicitar más imágenes</u></p>}
                     </div>
                     {/* User information */}
                     <div className="User-information-text">
 
-                      {/* User Description */}
+                        {/* User Description */}
                       <p>{this.state.userInfo.name}</p>
 
-                      {/* Basic Information */}
-                    <p><b>Is Active: </b>{this.state.userInfo.isActive ? "The auction is still active!! 🤩 🤩" : "The auction is not longer active 😭 😭"}</p>
-                    <p><b>User Type:</b> {this.state.userInfo.tipoUsuario}</p>
-
-                      {/* More information -  En funcion del tipo de */}
-                      {/* {this.state.highestBidder && <p><b>Highest Bidder:</b> {this.state.highestBidder}</p>}
-                      {this.state.highestPrice && <p><b>Highest Price:</b> {this.state.web3Provider.utils.fromWei(this.state.highestPrice, 'ether')} ether</p>}
-                      {this.state.basePrice && <p><b>Base price:</b> {this.state.basePrice}</p>}
-                      {this.state.originalOwner && <p><b>Original Owner:</b> {this.state.originalOwner}</p>}
-                      {this.state.newOwner && <p><b>New Owner:</b> {this.state.newOwner}</p>} */}
+                        {/* Basic Information */}
+                      <p><b>Is Active: </b>{this.state.userInfo.isActive ? "The user is still active!! 🤩 🤩" : "The user is not longer active 😭 😭"}</p>
+                      <p><b>User Type:</b> {this.state.userInfo.tipoUsuario}</p>
                     </div>
+                  </div>
                   </div>
                 </>
               }
-            </div>
           </div>
 
 
-          {/* ---- User actions ---- */}
+        {/* ---- User actions ---- */}
+
+        {
+          !this.state.userInfo &&
+          <>
           <div className="User-component-2">
             <div className="User-component-body">
               <div className="User-actions">
-                <h2>User actions</h2>
-
-                {/* Input & Button to bid */}
-                <input placeholder="Insert value in wei" onChange={(e) => this.setState({ value: e.target.value })}></input>
-                <button id="button-send" onClick={this.bid}>BID</button>
-
-                {/* Button to stop auction */}
-                <button id="button-send" onClick={this.stopUser}>STOP AUCTION</button>
-
-                {/* Helper to convert wei to ether */}
-                {this.state.value && <p>You're gonna bid: {this.state.web3Provider.utils.fromWei(this.state.value, 'ether')} ether</p>}
+                <h2>User Registration</h2>
+                <input placeholder="Insert name" onChange={(e) => this.setState({ userForm: { ...this.state.userForm, name: e.target.value } })}></input>
+                <input type="email"  placeholder="Insert email" onChange={(e) => this.setState({ userForm: { ...this.state.userForm, email: e.target.value } })}></input>
+                <input type="number" placeholder="Insert tipoUsuario" onChange={(e) => this.setState({ userForm: { ...this.state.userForm, tipoUsuario: parseInt(e.target.value) || '' } })}></input>
+                <input placeholder="Insert imageURI" onChange={(e) => this.setState({ userForm: { ...this.state.userForm, imageURI: e.target.value } })}></input>
+                <button id="button-send" onClick={this.registerUser}>Register User</button>
               </div>
             </div>
           </div>
-       
+          </>
+        }
       </div>
     );
   }
