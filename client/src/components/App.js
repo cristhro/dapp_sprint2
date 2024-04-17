@@ -45,6 +45,7 @@ export default class App extends React.Component {
     const donationContract = new web3.eth.Contract(DONATION_CONTRACT_ABI, DONATION_CONTRACT_ADDRESS);
     this.setState({ donationContract });
     this.setState({ donationAmount : 0 });
+    //const [donationMessage, setDonationMessage] = useState('');
 
 
       // Set web3, accounts, and contract to the state, and then proceed with an
@@ -95,10 +96,34 @@ export default class App extends React.Component {
   }
 
   registerDonation = async () => {
-    const { donationContract, donationAmount } = this.state;
-    const res = await donationContract.methods.receive(donationAmount).send({ from: accounts[0] });
+    const { donationContract, donationAmount, web3Provider, accounts } = this.state;
+    //const res = await donationContract.methods.receive().send({ from: accounts[0], value:1 });
+    
+     // Define la cantidad de Ether que quieres enviar
+     const amountToSend = web3Provider.utils.toWei('1', 'ether'); // 1 Ether
+    
+    try {
+      //await web3Provider.eth.sendTransaction({ from: accounts[0], to: donationContract, value: amountToSend });
+
+      //await web3Provider.eth.sendTransaction({ from: accounts[0], to: donationContract, value: web3.utils.toWei('1', 'ether') });
+      await donationContract.methods.receive().send({ from: accounts[0], value: web3Provider.utils.toWei(donationAmount, 'ether') });
+
+      //await donationContract.methods.receive().send({ from: accounts[0] });
+      //setDonationMessage('Donation successful!');
+  } catch (error) {
+      console.error('Error sending donation:', error);
+      //setDonationMessage('Donation failed.');
+  }
+    
+    
+    
     const response = await donationContract.methods.getTotalDonations().call();
     this.setState({ totalDonations: response })
+
+
+
+
+
     
   }
 
@@ -245,6 +270,7 @@ export default class App extends React.Component {
                 <input type="number" placeholder="Insert Donation" onChange={(e) => this.setState({ donationAmount: e.target.value })}></input>
                 <button id="button-send" onClick={this.registerDonation}>Register Donation</button>
               </div>
+              {/* <p>{donationMessage}</p> */}
             </div>
           </div>
 
