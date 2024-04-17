@@ -75,7 +75,7 @@ export default class App extends React.Component {
   getDonationInformation = async () => {
     const { accounts, contract } = this.state;
 
-    // Get the user information
+    // Get the donation information
     const response = await contract.methods.getTotalDonations().call();
     this.setState({ totalDonations: response })
   }
@@ -138,7 +138,7 @@ export default class App extends React.Component {
             <div className="User-component-body">
             <h2 id="inline">Donation information</h2>
                   <div className="User-information">
-                    {/* User information */}
+                    {/* Donation information */}
                     <div className="User-information-text">
                         {/* Basic Information */}
                       <p><b>Donations:</b> {this.state.totalDonations}</p>

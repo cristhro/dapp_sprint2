@@ -15,9 +15,13 @@ import getWeb3 from "../helpers/getWeb3";
 const CONTRACT_ADDRESS = require("../contracts/UserManagment.json").networks[1337].address //1337
 // const CONTRACT_ADDRESS = require("../contracts/User.json").networks[11155111].address //sepolia testnet
 
-
 const CONTRACT_ABI = require("../contracts/UserManagment.json").abi
 const CONTRACT_NAME = require("../contracts/UserManagment.json").contractName
+
+
+const DONATION_CONTRACT_ADDRESS = require("../contracts/Donation.json").networks[1337].address 
+const DONATION_CONTRACT_ABI = require("../contracts/Donation.json").abi
+
 
 export default class App extends React.Component {
   state = { web3Provider: null, accounts: null, networkId: null, contract: null, storageValue: null, userForm: {} };
@@ -36,12 +40,22 @@ export default class App extends React.Component {
       // Create the Smart Contract instance
       const contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
 
+
+    // Create the Smart Contract instance
+    const donationContract = new web3.eth.Contract(DONATION_CONTRACT_ABI, DONATION_CONTRACT_ADDRESS);
+    this.setState({ donationContract });
+    this.setState({ donationAmount : 0 });
+
+
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
       this.setState({ web3Provider: web3, accounts, networkId, contract });
 
       // Load user information
       this.getUserInformation();
+
+      // Load donation information
+      this.getDonationInformation();
 
       // --------- TO LISTEN TO EVENTS AFTER EVERY COMPONENT MOUNT ---------
       this.handleMetamaskEvent();
@@ -71,6 +85,26 @@ export default class App extends React.Component {
     })
   }
 
+  // ------------ GET DONATION INFORMATION FUNCTION ------------
+  getDonationInformation = async () => {
+    const { donationContract } = this.state;
+
+    // Get the user donation
+    const response = await donationContract.methods.getTotalDonations().call();
+    this.setState({ totalDonations: response })
+  }
+
+  registerDonation = async () => {
+    const { donationContract, donationAmount } = this.state;
+    const res = await donationContract.methods.receive(donationAmount).send({ from: accounts[0] });
+    const response = await donationContract.methods.getTotalDonations().call();
+    this.setState({ totalDonations: response })
+    
+  }
+
+  // --------------------------------------------------------------
+
+
   // ------------ GET USER INFORMATION FUNCTION ------------
   getUserInformation = async () => {
     const { accounts, contract } = this.state;
@@ -79,6 +113,8 @@ export default class App extends React.Component {
     const response = await contract.methods.getUser().call({ from: accounts[0] });
     this.setState({ userInfo: response })
   }
+
+ 
 
   // ------------ REGISTER FUNCTION ------------
   registerUser = async () => {
@@ -178,6 +214,41 @@ export default class App extends React.Component {
           </div>
           </>
         }
+
+       
+        <hr></hr>
+
+
+       {/* ---- Donation information ---- */}
+       <div className="User-component-1">
+        {
+            this.state.totalDonations &&
+            <>
+        <div className="User-component-body">
+        <h2 id="inline">Donation information</h2>
+              <div className="User-information">
+                {/* Donation information */}
+                <div className="User-information-text">
+                    {/* Basic Information */}
+                  <p><b>Donations:</b> {this.state.totalDonations}</p>
+                </div>
+              </div>
+              </div>
+            </>
+        }
+        </div>
+
+        <div className="User-component-2">
+            <div className="User-component-body">
+              <div className="User-actions">
+                <h2>Donation Registration</h2>
+                <input type="number" placeholder="Insert Donation" onChange={(e) => this.setState({ donationAmount: e.target.value })}></input>
+                <button id="button-send" onClick={this.registerDonation}>Register Donation</button>
+              </div>
+            </div>
+          </div>
+
+
       </div>
     );
   }
