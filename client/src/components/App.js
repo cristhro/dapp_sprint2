@@ -100,13 +100,13 @@ export default class App extends React.Component {
     //const res = await donationContract.methods.receive().send({ from: accounts[0], value:1 });
     
      // Define la cantidad de Ether que quieres enviar
-     const amountToSend = web3Provider.utils.toWei('1', 'ether'); // 1 Ether
+     //const amountToSend = web3Provider.utils.toWei('1', 'ether'); // 1 Ether
     
     try {
       //await web3Provider.eth.sendTransaction({ from: accounts[0], to: donationContract, value: amountToSend });
 
       //await web3Provider.eth.sendTransaction({ from: accounts[0], to: donationContract, value: web3.utils.toWei('1', 'ether') });
-      await donationContract.methods.receive().send({ from: accounts[0], value: web3Provider.utils.toWei(donationAmount, 'ether') });
+      await donationContract.methods.depositEther().send({ from: accounts[0], value: web3Provider.utils.toWei(donationAmount, 'ether') });
 
       //await donationContract.methods.receive().send({ from: accounts[0] });
       //setDonationMessage('Donation successful!');

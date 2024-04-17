@@ -13,7 +13,7 @@ contract Donation {
         owner = msg.sender;
     }
 
-    receive() external payable {
+    function depositEther() public payable {
         require(msg.value > 0, "Can't donate zero Ether");
         donorAmounts[msg.sender] += msg.value;
         totalDonations += msg.value;
