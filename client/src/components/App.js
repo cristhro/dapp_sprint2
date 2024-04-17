@@ -45,6 +45,7 @@ export default class App extends React.Component {
     const donationContract = new web3.eth.Contract(DONATION_CONTRACT_ABI, DONATION_CONTRACT_ADDRESS);
     this.setState({ donationContract });
     this.setState({ donationAmount : 0 });
+    this.setState({ myDonationAmount : 0 });
     //const [donationMessage, setDonationMessage] = useState('');
 
 
@@ -57,6 +58,9 @@ export default class App extends React.Component {
 
       // Load donation information
       this.getDonationInformation();
+
+       // Load my donation information
+       this.getMyDonationInformation();
 
       // --------- TO LISTEN TO EVENTS AFTER EVERY COMPONENT MOUNT ---------
       this.handleMetamaskEvent();
@@ -90,10 +94,22 @@ export default class App extends React.Component {
   getDonationInformation = async () => {
     const { donationContract } = this.state;
 
-    // Get the user donation
+    // Get the users donation
     const response = await donationContract.methods.getTotalDonations().call();
     this.setState({ totalDonations: response })
   }
+
+  // ------------ GET MY DONATION INFORMATION FUNCTION ------------
+  getMyDonationInformation = async () => {
+    const { donationContract, accounts } = this.state;
+
+    // Get the user donation
+    const response = await donationContract.methods.getDonationAmount(accounts[0]).call();
+    this.setState({ myDonationAmount: response })
+  }
+
+
+
 
   registerDonation = async () => {
     const { donationContract, donationAmount, web3Provider, accounts } = this.state;
@@ -120,7 +136,9 @@ export default class App extends React.Component {
     const response = await donationContract.methods.getTotalDonations().call();
     this.setState({ totalDonations: response })
 
-
+    // Get the user donation
+    const myResponse = await donationContract.methods.getDonationAmount(accounts[0]).call();
+    this.setState({ myDonationAmount: myResponse })
 
 
 
@@ -256,6 +274,7 @@ export default class App extends React.Component {
                 <div className="User-information-text">
                     {/* Basic Information */}
                   <p><b>Donations:</b> {this.state.totalDonations}</p>
+                  <p><b>My Donations:</b> {this.state.myDonationAmount}</p>
                 </div>
               </div>
               </div>
