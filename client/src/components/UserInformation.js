@@ -13,7 +13,7 @@ export const UserInformation = ({ user }) => {
             {/* User information */}
             <div className="User-information-text">
                 <p><b>User Name:</b> {user.name}</p>
-                <p><b>Is Active: </b>{user.isActive ? "The user is still active!! 🤩 🤩" : "The user is not longer active 😭 😭"}</p>
+                {/* <p><b>Active: </b>{user.isActive ? "The user is still active!! 🤩 🤩" : "The user is not longer active 😭 😭"}</p> */}
                 <p><b>User Type:</b> {parseTipoUsuario(user.tipoUsuario)}</p> 
             </div>
         </div>

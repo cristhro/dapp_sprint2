@@ -155,7 +155,22 @@ export default class App extends React.Component {
     this.setState({ userInfo: response })
   };
 
-
+  parseTipoUsuario(tipoUsuario) {
+    console.log('🚀 ~ parseTipoUsuario ~ tipoUsuario:', tipoUsuario)
+    switch (+tipoUsuario) {
+      case 1:
+        return "Alumno";
+      case 2:
+        return "Empresa";
+      case 3:
+        return "Instructor";
+      case 4:
+        return "Administrador";
+      default:
+        return "Unknown";
+    }
+  }
+  
   render() {
     if (!this.state.web3Provider) {
       return <div className="App-no-web3">
@@ -187,21 +202,63 @@ export default class App extends React.Component {
           {/* User registered */}
           {this.state.userInfo && (
             <div className="User-logged">
-              <div className="card">
-                <UserInformation className="card" user={this.state.userInfo} />
-              </div>
-              {/* ---- Donation information ---- */}
-              <div className="card">
-                <DonationInformation totalDonations={this.state.totalDonations} myDonationAmount={this.state.myDonationAmount} />
-              </div>
+              <div className="User-common-actions">
+                <div className="card">
+                  <UserInformation className="card" user={this.state.userInfo} />
+                </div>
+                {/* ---- Donation information ---- */}
+                <div className="card">
+                  <DonationInformation totalDonations={this.state.totalDonations} myDonationAmount={this.state.myDonationAmount} />
+                </div>
 
-              <div className="card">
-                <RegisterDonation onRegisterDonation={this.registerDonation} myDonationAmount={this.state.myDonationAmount} />
+                <div className="card">
+                  <RegisterDonation onRegisterDonation={this.registerDonation} myDonationAmount={this.state.myDonationAmount} />
+                </div>
+              </div>
+              <div className="User-custom-actions">
+                {/* Alumno */}
+                {+this.state.userInfo.tipoUsuario === 1 && (
+                  <div className="card">
+                    <h2>Acciones para el Alumno</h2>
+                    <p>Proximamente...</p>
+                    <button disabled >Enroll in course</button>
+                  </div>
+                )}
+                {/* Empresa */}
+                {+this.state.userInfo.tipoUsuario === 2 && (
+                  <div className="card">
+                    <h2>Acciones para la Empresa</h2>
+                    <p>Proximamente...</p>
+                    <button disabled>Registrar empresa</button>
+                    <button disabled>Crear proyectos</button>
+                  </div>
+                )}
+                {/* Instructor */}
+                {+this.state.userInfo.tipoUsuario === 3 && (
+                  <div className="card">
+                    <h2>Acciones para el Instructor</h2>
+                    <p>Proximamente...</p>
+                    <button disabled>Añadir notas</button>
+                    <button disabled>Listar estudiantes</button>
+                  </div>
+                )}
+                {/* Administrador */}
+                {+this.state.userInfo.tipoUsuario === 4 && (
+                  <div className="card">
+                    <h2>Acciones para el Administrador</h2>
+                    <p>Proximamente...</p>
+                    <button disabled>Ver balance</button>
+                    <button disabled>Ver proyectos</button>
+                  </div>
+                )}
               </div>
             </div>
           )}
+
         </div>
       </div>
     );
   }
+
+  
 }

@@ -34,9 +34,15 @@ export const RegisterUser = ({ onRegisterUser }) => {
                     <AnimatedLabel text="Email" />
                 </div>
                 <div className="wave-group">
-                    <input className="input" type="number" placeholder="Insert tipoUsuario" onChange={(e) => setValue({ ...value, tipoUsuario: parseInt(e.target.value) || '' })}></input>
+                    <select className="input" onChange={(e) => setValue({ ...value, tipoUsuario: parseInt(e.target.value) || '' })}>
+                        <option value="">Select user type</option>
+                        <option value="1">Alumno</option>
+                        <option value="2">Empresa</option>
+                        <option value="3">Instructor</option>
+                        <option value="4">Administrador</option>
+                    </select>
                     <span className="bar"></span>
-                    <AnimatedLabel text="Tipo usuario" />
+                    <AnimatedLabel text="User Type" />
                 </div>
                 <div className="wave-group">
                     <input className="input" placeholder="Insert imageURI" onChange={(e) => setValue({ ...value, imageURI: e.target.value })}></input>

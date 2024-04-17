@@ -29,7 +29,7 @@ export const RegisterDonation = ({ onRegisterDonation }) => {
                     <AnimatedLabel text="Donation (ETH)" />
                 </div>
                 <br></br>
-                <button type="submit" >Registrar donación</button>
+                <button disabled={value==0 } type="submit" >Registrar donación</button>
             </form>
         </div>
     );

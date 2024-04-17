@@ -92,6 +92,24 @@
   place-items: center;
   grid-auto-flow: column; */
 }
+.User-common-actions {
+  display: flex;
+  flex-flow: wrap;
+  place-items: flex-start;
+}
+.User-custom-actions {
+  display: flex;
+  flex-flow: wrap;
+  place-items: flex-start;
+}
+.User-logged {
+  display: flex;
+  flex-flow: wrap;
+  place-items: flex-start;
+  /* display: grid;
+  place-items: center;
+  grid-auto-flow: column; */
+}
 
 .User-body-components {
   width: 80%;
